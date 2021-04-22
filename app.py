@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify,  render_template
 import json
 import redis
 
@@ -18,8 +18,11 @@ def wamember():
 
     #print (request.is_json)
     content = request.get_json()
-    result = r.set(content['AccountId'],json.dumps(content))
-    print (content['AccountId'])
+    print(content)
+    jcontent = json.dumps(content)
+    print(jcontent)
+    result = r.set(content['AccountId'],jcontent)
+    #print (content['AccountId'])
     #print (content)
     return json.dumps(content)
     #return ("Hello World - in wamember")
@@ -31,14 +34,25 @@ def a2queue():
     myPassword = "NJmqGdGgab4ZVlMcGKPbdF48D9JJilL+tExVYI+PU9Y="
 
     r = redis.StrictRedis(host=myHostname, port=6380,
-                          password=myPassword, ssl=True)
+                          password=myPassword, ssl=True, decode_responses=True)
 
+    theq = {}
     mymap = r.keys(pattern='*')
+    print(mymap)
     for key in mymap:
         value = r.get(key)
-        print (value)
+        print(value)
+        theq[key] = value
 
-    return (value)
+    print(theq)
+
+
+    #for idx in theq:
+        #print(idx + ":" + theq[idx]['Parameters']['Contact.Id'] + "\r")
+
+    return render_template('index.html', title='Wild Apricot Users Pending Xfer to ACCME Academy', queue=theq)
+
+    return ("cache dumped")
 
 
 @app.route("/redistest", methods=['GET', 'POST'])
@@ -63,4 +77,5 @@ def redistest():
     for c in result:
         print("id : " + c['id'] + ", addr : " + c['addr'])
 
+    r.flushdb()
     return json.dumps(result)
