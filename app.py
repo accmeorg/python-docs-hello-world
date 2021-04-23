@@ -48,7 +48,8 @@ def wamember():
     content = request.get_json()
     messagetype = content['MessageType']
 
-    if (messagetype == 'Membership' or messagetype == 'Contact'):
+    #if (messagetype == 'Membership' or messagetype == 'Contact'):
+    if messagetype.__contains__("embership") or messagetype.__contains__("ontact"):
 
         whmessage['messagetype'] = messagetype
 

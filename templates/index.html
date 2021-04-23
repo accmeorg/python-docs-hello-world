@@ -4,7 +4,8 @@
         <h1>{{title}}</h1>
     </head>
     <body>
-        <h1>Hello {{ username }}</h1>
-        {{queue}}
+        {%for key, value in queue.items():%}
+          <li>{{value}}</li>
+        {%endfor%}
     </body>
 </html>
