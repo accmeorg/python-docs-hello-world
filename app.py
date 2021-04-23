@@ -9,7 +9,6 @@ import urllib.error
 import urllib.parse
 import base64
 import WaApi
-from bson import json_util
 
 app = Flask(__name__)
 
