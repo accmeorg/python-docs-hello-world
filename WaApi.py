@@ -97,7 +97,7 @@ class WaApiClient(object):
             else:
                 method = "POST"
 
-        print(api_url)
+        #print(api_url)
         request = urllib.request.Request(api_url, method=method)
         if api_request_object is not None:
             request.data = json.dumps(api_request_object, cls=_ApiObjectEncoder).encode()

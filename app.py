@@ -42,23 +42,25 @@ def wamember():
     r = redis.StrictRedis(host=myHostname, port=6380,
                           password=myPassword, ssl=True,decode_responses=True)
 
-    whkey = uuid.uuid4().int
-    content = request.get_json()
-    accountid = content['AccountId']
-    contactid = content['Parameters']['Contact.Id']
-    action = content['Parameters']['Action']
-
-
     whmessage = {}
-    messagetype = content['MessageType']
-    whmessage['messagetype'] = messagetype
+    whkey = uuid.uuid4().int
 
-    api = WaApi.WaApiClient("cme4ever", "f9wdkodsv0o2xxxe7k8232v852pvnw")
-    api.authenticate_with_contact_credentials("jcole@accme.org", "BFL#FEpZzK")
-    #api.authenticate_with_contact_credentials("ADMINISTRATOR_USERNAME", "ADMINISTRATOR_PASSWORD")
-    contact = api.execute_request("/v2/accounts/"+ str(accountid) + "/contacts/" + str(contactid))
+    content = request.get_json()
+    messagetype = content['MessageType']
 
     if (messagetype == 'Membership' or messagetype == 'Contact'):
+
+        whmessage['messagetype'] = messagetype
+
+        accountid = content['AccountId']
+        contactid = content['Parameters']['Contact.Id']
+        action = content['Parameters']['Action']
+
+        api = WaApi.WaApiClient("cme4ever", "f9wdkodsv0o2xxxe7k8232v852pvnw")
+        api.authenticate_with_contact_credentials("jcole@accme.org", "BFL#FEpZzK")
+        #api.authenticate_with_contact_credentials("ADMINISTRATOR_USERNAME", "ADMINISTRATOR_PASSWORD")
+        contact = api.execute_request("/v2/accounts/"+ str(accountid) + "/contacts/" + str(contactid))
+
         whmessage['accountid'] = accountid
         whmessage['contactid'] = contactid
         whmessage['action'] = action
@@ -67,16 +69,17 @@ def wamember():
         whmessage['email'] = contact.Email
 
 
-    jcontent = json.dumps(whmessage)
-    #print(whmessage)
+        jcontent = json.dumps(whmessage)
+        result = r.set(whkey,jcontent)
+        #print(whmessage)
 
 
-    #jcontent = json.dumps(content)
-    #print(content)
-    result = r.set(whkey,jcontent)
-    #print (content['AccountId'])
-    #print(content['Parameters']['Contact.Id'])
-    #print (content)
+        #jcontent = json.dumps(content)
+        #print(content)
+
+        #print (content['AccountId'])
+        #print(content['Parameters']['Contact.Id'])
+        #print (content)
     return (whmessage)
 
 
