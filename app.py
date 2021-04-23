@@ -55,7 +55,7 @@ def wamember():
 
         accountid = content['AccountId']
         contactid = content['Parameters']['Contact.Id']
-        action = content['Parameters']['Action']
+        #action = content['Parameters']['Action']
 
         api = WaApi.WaApiClient("cme4ever", "f9wdkodsv0o2xxxe7k8232v852pvnw")
         api.authenticate_with_contact_credentials("jcole@accme.org", "BFL#FEpZzK")
@@ -64,7 +64,7 @@ def wamember():
 
         whmessage['accountid'] = accountid
         whmessage['contactid'] = contactid
-        whmessage['action'] = action
+        whmessage['action'] = messagetype
         whmessage['firstname'] = contact.FirstName
         whmessage['lastname'] = contact.LastName
         whmessage['email'] = contact.Email
